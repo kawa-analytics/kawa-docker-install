@@ -68,8 +68,23 @@ services:
 
 volumes:
   pgdata:
+    driver: local
+    driver_opts:
+      type: none
+      device: _MOUNT_DIRECTORY_/pgdata
+      o: bind
   clickhousedata:
+    driver: local
+    driver_opts:
+      type: none
+      device: _MOUNT_DIRECTORY_/clickhousedata
+      o: bind
   kawadata:
+    driver: local
+    driver_opts:
+      type: none
+      device: _MOUNT_DIRECTORY_/kawadata
+      o: bind
 
 secrets:
   smtp-credentials:
