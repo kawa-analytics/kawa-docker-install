@@ -9,6 +9,7 @@ services:
     ports:
       - 8815:8815
     environment:
+      KAWA_URL: _KAWA_URL_
       KAWA_AUTOMATION_SERVER_AES_KEY_FILE: /run/secrets/runner-aes-key
 
   kawa-server:
