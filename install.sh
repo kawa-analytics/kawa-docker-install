@@ -20,6 +20,7 @@ KAWA_HASHED_DB_PASSWORD=$(echo -n $KAWA_DB_PASSWORD | shasum -a 256 | cut -d ' '
 KAWA_RUNNER_AES_KEY=$(head /dev/urandom | shasum -a 256 | cut -d ' ' -f 1)
 
 # Generate the key files
+# They will be mounted in docker compose secrets and consumed by kawa
 echo $KAWA_RUNNER_AES_KEY > kawa.runner.key
 echo $KAWA_DB_PASSWORD > db.password
 echo $KAWA_MASTER_KEY > kawa.master.key
@@ -27,6 +28,7 @@ chown $KAWA_USER db.password kawa.master.key kawa.runner.key
 chmod 600 db.password kawa.master.key kawa.runner.key
 
 # Update the clickhouse user override file
+# It accepts the sha256 of the password.
 sed -i "s/.*password_sha256.*/<password_sha256_hex>$KAWA_HASHED_DB_PASSWORD<\/password_sha256_hex>/g" ./assets/users.d/kawa.xml
 
 # Configure SMTP
