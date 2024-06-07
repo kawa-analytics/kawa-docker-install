@@ -58,7 +58,7 @@ cp ./assets/docker-compose-template.yml $DOCKER_COMPOSE_FILE
 # Clickhouse data, Postgres data and Kawa data
 read -p "Where do you want to persist your data? Specify a directory to mount all your volumes on. " MOUNT_DIRECTORY
 mkdir -p $MOUNT_DIRECTORY/pgdata $MOUNT_DIRECTORY/clickhousedata $MOUNT_DIRECTORY/kawadata
-sed -i "s/_MOUNT_DIRECTORY_/$MOUNT_DIRECTORY/g" $DOCKER_COMPOSE_FILE
+sed -i "s|_MOUNT_DIRECTORY_|$MOUNT_DIRECTORY|g" $DOCKER_COMPOSE_FILE
 
 # Configure SSL
 read -p "Do you want to use HTTPS to connect to KAWA? Y/[N] " USE_SSL
