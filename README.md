@@ -71,37 +71,17 @@ GbT3zdqLPofY3RTdR56
 sudo ./install.sh
 ```
 
-
-__Concerning SMTP and HTTPS__
-
 > __SMTP:__ You will be asked if you wish to configure SMTP. If that is the case, you will be prompted for a SMTP username and a password. The configuration of the SMTP server itself will be done later on (host, port, etc..)
 
 > __HTTPS:__ You will be prompted if you wish to use HTTPS to connect to KAWA. If it is the case, you will have to provide your ssl certificate (.crt) and your private key (.key) files. 
 
-> The private key file must be in the PKCS8 format with PEM encoding:
+> __DATA DIRECTORY:__ During the installation process, you will be asked to
+specify a data directory. Make sure you have enough space to store all your data! It will be the mountpoint for all your docker 
+volumes. 
 
-```
-----BEGIN PRIVATE KEY-----
-FGtwrtwrRWgwrtkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4V27AzO53qFL4
-RNnJhLbQ6H32TjNUpRkDwZYjzhjXclSz4tVmfHUhzev2UgEvpdPDu9yM42LTlvKf
-(...)
-Yjg83FpyQ866uInZQ3zv5IL+kFzJ0UBc0tOYjAOxAoGAHtJYxd54Ckb8bREb3w39
-DKWZojHYPXCtm+MjpPgVF95XEfYoW9Fm1Eul8s0bZWe4m5ywD0fei7Lojxp72dD1
-+4UeFll8DI+gLlo2N9ka5dT+KZQcv35M+hzrfNoewcaxTCjQvyu9VdeSPdAEPT77
-euiPbW7ULBJ6VBbuUdw+viA=
------END PRIVATE KEY-----
-```
-
->  The certificate must also be PEM encoded
-
-```
-----BEGIN CERTIFICATE-----
-DKWZojHYPXCtm+MjpPgVF95XEfYoW9Fm1Eul8s0bZWe4m5ywD0fei7Lojxp72dD1
-FGtwrtwrRWgwrtkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4V27AzO53qFL4
-(...)
-FGtwrtwrRWgwrtkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4V27AzO53qFL4
-eFPv12PFiKw4B4adtTAR6LjVevRMqBvbJ16pVuVcg7SHAIXplOTnay0=
------END CERTIFICATE-----
-```
+It will contain 3 subdirectories,
+- one for postgres data: `pgdata`
+- one for clickhouse data `clickhousedata` 
+- one for the files that have been uploade by users in kawa: `kawadata`
 
 
