@@ -27,7 +27,7 @@ chown $KAWA_USER db.password kawa.master.key kawa.runner.key
 chmod 600 db.password kawa.master.key kawa.runner.key
 
 # Update the clickhouse user override file
-sed -i '' "s/.*password_sha256.*/<password_sha256_hex>$KAWA_HASHED_DB_PASSWORD<\/password_sha256_hex>/g" ./assets/users.d/kawa.xml
+sed -i "s/.*password_sha256.*/<password_sha256_hex>$KAWA_HASHED_DB_PASSWORD<\/password_sha256_hex>/g" ./assets/users.d/kawa.xml
 
 # Configure SMTP
 read -p "Do you want to setup a connection with a SMTP server? Y/[N] " SETUP_SMTP
@@ -65,13 +65,13 @@ if [ "$USE_SSL" == 'Y' ] || [ "$USE_SSL" == 'y' ]; then
   chmod 600 ./server.crt ./server.key
 
   # Turns on HTTPS
-  sed -i '' 's/_USE_HTTPS_/true/g' $DOCKER_COMPOSE_FILE
+  sed -i 's/_USE_HTTPS_/true/g' $DOCKER_COMPOSE_FILE
  
 else
   # Turns off HTTPS
-  sed -i '' 's/_USE_HTTPS_/false/g' $DOCKER_COMPOSE_FILE
-  sed -i '' 's/.*KAWA_PATH_TO_SERVER_CERTIFICATE.*//g' $DOCKER_COMPOSE_FILE
-  sed -i '' 's/.*KAWA_PATH_TO_SERVER_PRIVATE_KEY.*//g'$DOCKER_COMPOSE_FILE
+  sed -i 's/_USE_HTTPS_/false/g' $DOCKER_COMPOSE_FILE
+  sed -i 's/.*KAWA_PATH_TO_SERVER_CERTIFICATE.*//g' $DOCKER_COMPOSE_FILE
+  sed -i 's/.*KAWA_PATH_TO_SERVER_PRIVATE_KEY.*//g'$DOCKER_COMPOSE_FILE
 fi
 
 
