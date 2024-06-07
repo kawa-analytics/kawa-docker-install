@@ -1,7 +1,6 @@
 KAWA Docker-compose installation
 ==============
 
-
 This setup is ideal for small to medium deployments. 
 
 **It is the recommended way to get started with the KAWA platform.**
@@ -10,6 +9,13 @@ Persistence layers are implemented with Clickhouse and Postgres, they can easily
 
 
 It should be paired up with some scheduled backups of the persisted data, either through databases backups, either through disk snapshots. This is not covered by this documentation.
+
+Here is what will be installed:
+
+<p align="center">
+  <img  src="readme-assets/docker-compose.png" alt="Docker compose network">
+</p>
+
 
 
 ## 1. Prerequisites
