@@ -1,2 +1,75 @@
-# kawa-docker-install - 
-Docker Compose install of the Kawa Analytics Platform
+KAWA Docker-compose installation
+==============
+
+
+This setup is ideal for small to medium deployments. 
+
+**It is the recommended way to get started with the KAWA platform.**
+
+Persistence layers are implemented with Clickhouse and Postgres, they can easily be migrated out to standalone servers later on.
+
+
+It should be paired up with some scheduled backups of the persisted data, either through databases backups, either through disk snapshots. This is not covered by this documentation.
+
+
+## 1. Prerequisites
+
+### 1.a General requirements
+
+We currently support Ubuntu Systems 20.04, 22.04 and 24.04 LTS.
+Compatibilty with other linux ditributions should work fine but was not tested.
+
+Here is what you will need:
+
+- You need an account with the ability to run sudo on the target machine
+
+- Access and Credentials to our registry here: [Gitlab registry](registry.gitlab.com/kawa-analytics-dev).
+
+- Working installation of docker + docker compose on the target machine. Please refer to this document for guidance: [Docker Documentation.](https://docs.docker.com/engine/install/ubuntu/)
+
+- A valid KAWA license.
+
+
+### 1.b Hardware requirements
+
+__RAM__
+
+For small amounts of data (up to ~200 GB compressed), it is best to use as much memory as the volume of data. For large amounts of data and when processing interactive (online) queries, you should use a reasonable amount of RAM (128 GB or more) so the hot data subset will fit in the cache of pages. Even for data volumes of ~50 TB per server, using 128 GB of RAM significantly improves query performance compared to 64 GB.
+
+__CPU__
+
+KAWA will use all available CPU to maximize performance. So the more CPU - the better. For processing up to hundreds of millions / billions of rows, the recommended number of CPUs is at least 64-cores. Both AMD64 and ARM64 architectures are supported.
+
+__Storage Subsystem__
+
+SSD is preferred. HDD is the second best option, SATA HDDs 7200 RPM will do. The capacity of the storage subsystem directly depends on the target analytics perimeter.
+
+
+
+
+## 2. Installation procedure
+
+Please follow those steps to install KAWA.
+
+### 2.a Install the KAWA Server
+
+1- Clone this repository in the directory you want to install KAWA in: `git clone https://github.com/kawa-analytics/kawa-docker-install.git`
+
+2- Input the credentials to access gitlab registry in the following file: `assets/kawa-registry.credentials`. Replace the first line by your token name, the second by the token value. 
+Those credentials should have been communicated to you by the KAWA support team.
+
+Here is an example of a valid file:
+
+```
+wayne-enterpises
+GbT3zdqLPofY3RTdR56
+```
+
+3- Lastly, run the installation script:
+
+```
+sudo ./install.sh
+```
+
+
+

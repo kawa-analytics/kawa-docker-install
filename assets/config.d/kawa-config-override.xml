@@ -1,0 +1,7 @@
+<clickhouse>
+        <logger>
+                <level>information</level>
+        </logger>
+	<http_port>8123</http_port>
+        <listen_host>0.0.0.0</listen_host>
+</clickhouse>

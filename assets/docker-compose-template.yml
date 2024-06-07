@@ -1,0 +1,86 @@
+version: '3'
+
+services:
+  kawa-script-runner:
+    image: "registry.gitlab.com/kawa-analytics-dev/kywy/develop:latest"
+    secrets:
+      - source: runner-aes-key
+        target: runner-aes-key
+    ports:
+      - 8815:8815
+    environment:
+      KAWA_AUTOMATION_SERVER_AES_KEY_FILE: /run/secrets/runner-aes-key
+
+  kawa-server:
+    image: "registry.gitlab.com/kawa-analytics-dev/merged-image-build/develop:latest"
+    secrets:
+      - source: server-certificate
+        target: server-certificate
+      - source: server-private-key
+        target: server-private-key
+      - source: kawa-master-key
+        target: kawa-master-key
+      - source: postgres-password
+        target: postgres-password
+      - source: runner-aes-key
+        target: runner-aes-key
+      - source: smtp-credentials
+        target: smtp-credentials
+    ports:
+        - 8080:8080
+    volumes:
+      - kawadata:/home/kawa/user-files
+    environment:
+      KAWA_FILE_STORE_DIRECTORY: /home/kawa/user-files/local
+      KAWA_SMTP_CREDENTIALS_FILE: /run/secrets/smtp-credentials
+      KAWA_AUTOMATION_SERVER_AES_KEY_FILE: /run/secrets/runner-aes-key
+      KAWA_PATH_TO_SERVER_CERTIFICATE: /run/secrets/server-certificate
+      KAWA_PATH_TO_SERVER_PRIVATE_KEY: /run/secrets/server-private-key
+      KAWA_BYPASS_VAULT: true
+      KAWA_HTTPS: _USE_HTTPS_
+      DB_PASSWORD_FILE: /run/secrets/postgres-password
+      KAWA_MASTER_KEY_FILE: /run/secrets/kawa-master-key
+
+  clickhouse:
+    image: "clickhouse/clickhouse-server:23.8.4-alpine"
+    volumes:
+      - clickhousedata:/var/lib/clickhouse
+      - /tmp/clickhouse-server:/var/log/clickhouse-server
+      - ./assets/users.d:/etc/clickhouse-server/users.d
+      - ./assets/config.d:/etc/clickhouse-server/config.d
+
+    ports:
+      - 8123:8123
+
+  postgres:
+    image: "postgres:13.12-alpine"
+    environment:
+      POSTGRES_USER: kawa
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres-password
+      POSTGRES_DB: kawa
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    secrets:
+      - source: postgres-password
+        target: postgres-password   
+
+volumes:
+  pgdata:
+  clickhousedata:
+  kawadata:
+
+secrets:
+  smtp-credentials:
+    file: smtp.credentials
+  server-certificate:
+    file: server.crt
+  server-private-key:
+    file: server.key
+  kawa-master-key:
+    file: kawa.master.key
+  postgres-password:
+    file: db.password
+  runner-aes-key:
+    file: kawa.runner.key
