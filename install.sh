@@ -70,10 +70,14 @@ if [ "$USE_SSL" == 'Y' ] || [ "$USE_SSL" == 'y' ]; then
   sed -i 's/_USE_HTTPS_/true/g' $DOCKER_COMPOSE_FILE
  
 else
-  # Turns off HTTPS
+  # Turns off HTTPS and remove unnecessary entries in docker compose file
   sed -i 's/_USE_HTTPS_/false/g' $DOCKER_COMPOSE_FILE
-  sed -i 's/.*KAWA_PATH_TO_SERVER_CERTIFICATE.*//g' $DOCKER_COMPOSE_FILE
-  sed -i 's/.*KAWA_PATH_TO_SERVER_PRIVATE_KEY.*//g' $DOCKER_COMPOSE_FILE
+  sed -i '/.*KAWA_PATH_TO_SERVER_CERTIFICATE.*/d' $DOCKER_COMPOSE_FILE
+  sed -i '/.*KAWA_PATH_TO_SERVER_PRIVATE_KEY.*/d' $DOCKER_COMPOSE_FILE
+  sed -i '/\s*file: server\.key/d' $DOCKER_COMPOSE_FILE
+  sed -i '/\s*file: server\.crt/d' $DOCKER_COMPOSE_FILE
+  sed -i '/.*server-private-key.*/d' $DOCKER_COMPOSE_FILE
+  sed -i '/.*server-certificate.*/d' $DOCKER_COMPOSE_FILE
 fi
 
 
