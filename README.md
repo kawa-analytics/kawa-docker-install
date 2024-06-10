@@ -82,12 +82,44 @@ sudo ./install.sh
 > __HTTPS:__ You will be prompted if you wish to use HTTPS to connect to KAWA. If it is the case, you will have to provide your ssl certificate (.crt) and your private key (.key) files. 
 
 > __DATA DIRECTORY:__ During the installation process, you will be asked to
-specify a data directory. Make sure you have enough space to store all your data! It will be the mountpoint for all your docker 
-volumes. 
+specify a data directory. Make sure you have enough space to store all your data. It will be the mountpoint for all your docker volumes. It is recommended to backup this directory once every day for disaster recovery. 
 
 It will contain 3 subdirectories,
 - one for postgres data: `pgdata`
 - one for clickhouse data `clickhousedata` 
 - one for the files that have been uploade by users in kawa: `kawadata`
+
+
+### 2.b Test login on the WEB UI
+
+4- Connect to the web server from a web browser to test the insatllation:
+
+By default, KAWA will listen on port 8080.
+Make sure to use the correct protocol HTTP vs HTTPS depending on what you configured.
+
+The default credentials are:
+```
+login: setup-admin@kawa.io
+password: changeme
+```
+
+<p align="center">
+  <img  src="readme-assets/login.png" alt="Login page">
+</p>
+
+
+
+
+## 3. Initial configuration
+
+In order to configure KAWA before it can be used, you need to install its
+python client.
+It requires python 3.10 or higher.
+
+```
+pip install kywy
+```
+
+
 
 

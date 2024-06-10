@@ -1,8 +1,6 @@
-version: '3'
-
 services:
   kawa-script-runner:
-    image: "registry.gitlab.com/kawa-analytics-dev/kywy/develop:latest"
+    image: "registry.gitlab.com/kawa-analytics-dev/kawa-python-server/develop"
     secrets:
       - source: runner-aes-key
         target: runner-aes-key

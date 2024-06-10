@@ -69,12 +69,12 @@ if [ "$USE_SSL" == 'Y' ] || [ "$USE_SSL" == 'y' ]; then
 
   # Turns on HTTPS
   sed -i 's/_USE_HTTPS_/true/g' $DOCKER_COMPOSE_FILE
-  sed -i 's|_KAWA_URL_|https://localhost:8080|g' $DOCKER_COMPOSE_FILE
+  sed -i 's|_KAWA_URL_|https://kawa-server:8080|g' $DOCKER_COMPOSE_FILE
 
 else
   # Turns off HTTPS and remove unnecessary entries in docker compose file
   sed -i 's/_USE_HTTPS_/false/g' $DOCKER_COMPOSE_FILE
-  sed -i 's|_KAWA_URL_|http://localhost:8080|g' $DOCKER_COMPOSE_FILE
+  sed -i 's|_KAWA_URL_|http://kawa-server:8080|g' $DOCKER_COMPOSE_FILE
 
   sed -i '/.*KAWA_PATH_TO_SERVER_CERTIFICATE.*/d' $DOCKER_COMPOSE_FILE
   sed -i '/.*KAWA_PATH_TO_SERVER_PRIVATE_KEY.*/d' $DOCKER_COMPOSE_FILE
