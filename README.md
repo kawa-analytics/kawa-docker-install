@@ -108,18 +108,9 @@ password: changeme
 </p>
 
 
-
-
 ## 3. Initial configuration
 
-In order to configure KAWA before it can be used, you need to install its
-python client.
-It requires python 3.10 or higher.
+The initial confguration can be done following the documentation hosted here: [KYWY doc github](https://github.com/kawa-analytics/kywy-documentation).
 
-```
-pip install kywy
-```
-
-
-
+Follow the README and then:  [Initial setup Notebook](https://github.com/kawa-analytics/kywy-documentation/blob/main/05_initial_instance_configuration.ipynb] )
 
