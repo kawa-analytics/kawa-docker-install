@@ -44,7 +44,7 @@ For small amounts of data (up to ~200 GB compressed), it is best to use as much 
 
 __CPU__
 
-KAWA will use all available CPU to maximize performance. So the more CPU - the better. For processing up to hundreds of millions / billions of rows, the recommended number of CPUs is at least 64-cores. Both AMD64 and ARM64 architectures are supported.
+KAWA will use all available CPU to maximize performance. So the more CPU - the better. For processing up to hundreds of millions / billions of rows, the recommended number of CPUs is at least 64-cores. We only support AMD64 architecture.
 
 __Storage Subsystem__
 
