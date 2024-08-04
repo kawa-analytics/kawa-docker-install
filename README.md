@@ -35,6 +35,8 @@ Here is what you will need:
 
 - A valid KAWA license.
 
+- (Optional): If using Open Id connect, you need a properly configured application and be in possession of the client id and secret.
+
 
 ### 1.b Hardware requirements
 
@@ -51,6 +53,12 @@ __Storage Subsystem__
 SSD is preferred. HDD is the second best option, SATA HDDs 7200 RPM will do. The capacity of the storage subsystem directly depends on the target analytics perimeter.
 
 
+### 1.c OPEN ID Connect (Optional)
+
+If you wish to configure authentication and authorization with OIDC,
+please follow this guide (Example on OKTA) befor going through the installation procedure.
+
+[Configure OIDC with OKTA.](/documentation/CONFIGURE_OIDC_WITH_OKTA.md)
 
 
 ## 2. Installation procedure

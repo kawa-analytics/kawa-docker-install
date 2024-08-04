@@ -37,6 +37,7 @@ services:
       KAWA_PATH_TO_SERVER_PRIVATE_KEY: /run/secrets/server-private-key
       KAWA_BYPASS_VAULT: true
       KAWA_HTTPS: _USE_HTTPS_
+      KAWA_OAUTH2_CLIENT_SECRET: _OAUTH2_CLIENT_SECRET_
       DB_PASSWORD_FILE: /run/secrets/postgres-password
       KAWA_MASTER_KEY_FILE: /run/secrets/kawa-master-key
 
