@@ -31,15 +31,6 @@ chmod 600 db.password kawa.master.key kawa.runner.key
 # It accepts the sha256 of the password.
 sed -i "s/.*password_sha256.*/<password_sha256_hex>$KAWA_HASHED_DB_PASSWORD<\/password_sha256_hex>/g" ./assets/users.d/kawa.xml
 
-# Configure OpenID/Oauth2 Secret
-read -p "Do you want to setup SSO (OpenID Connect/OAuth2) Y/[N] " SETUP_OAUTH2
-if [ "$SETUP_OAUTH2" == 'Y' ] || [ "$SETUP_OAUTH2" == 'y' ]; then
-  read -p "Please specify the client secret for your application: " CLIENT_SECRET
-  sed -i "s|_OAUTH2_CLIENT_SECRET_|$CLIENT_SECRET|g" $DOCKER_COMPOSE_FILE
-else
-  sed -i "s|_OAUTH2_CLIENT_SECRET_|NA|g" $DOCKER_COMPOSE_FILE
-fi
-
 # Configure SMTP
 read -p "Do you want to setup a connection with a SMTP server? Y/[N] " SETUP_SMTP
 if [ "$SETUP_SMTP" == 'Y' ] || [ "$SETUP_SMTP" == 'y' ]; then
@@ -62,6 +53,14 @@ chmod 600 ./smtp.credentials
 DOCKER_COMPOSE_FILE=./docker-compose.yml
 cp ./assets/docker-compose-template.yml $DOCKER_COMPOSE_FILE
 
+# Configure OpenID/Oauth2 Secret
+read -p "Do you want to setup SSO (OpenID Connect/OAuth2) Y/[N] " SETUP_OAUTH2
+if [ "$SETUP_OAUTH2" == 'Y' ] || [ "$SETUP_OAUTH2" == 'y' ]; then
+  read -p "Please specify the client secret for your application: " CLIENT_SECRET
+  sed -i "s|_OAUTH2_CLIENT_SECRET_|$CLIENT_SECRET|g" $DOCKER_COMPOSE_FILE
+else
+  sed -i "s|_OAUTH2_CLIENT_SECRET_|NA|g" $DOCKER_COMPOSE_FILE
+fi
 
 # Configure SSL
 read -p "Do you want to use HTTPS to connect to KAWA? Y/[N] " USE_SSL
