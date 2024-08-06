@@ -20,7 +20,7 @@ Sign-in method = `OIDC` and Application type = `Web Application`.
 
 ### 1.a General settings
 
-Please specify the application name and upload a logo if you wish.
+Please specify the application name and upload a logo if you wish (logos are available in the logos directory).
 Please tick both `Authorization Code` and `Refresh Token`. (Refresh Token is not ticked by default and is required for KAWA to work properly)
 
 
