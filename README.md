@@ -64,6 +64,10 @@ please follow this guide (Example on OKTA) befor going through the installation 
 ## 2. Installation procedure
 
 Please follow those steps to install KAWA.
+The general flow is:
+- Clone the install package on the target machine
+- Run the installation script
+- Perform the initial configuration: such as setup the admin password, upload the license, etc.
 
 ### 2.a Install the KAWA Server
 
@@ -87,20 +91,23 @@ sudo ./install.sh
 
 > __SMTP:__ You will be asked if you wish to configure SMTP. If that is the case, you will be prompted for a SMTP username and a password. The configuration of the SMTP server itself will be done later on (host, port, etc..)
 
+> __OIDC:__ You will be prompted if you wish to use Open ID Connect (OIDC) for authenticating users. If you say yes, you will be prompted for the client secret, generated in step 1.c.
+
+
 > __HTTPS:__ You will be prompted if you wish to use HTTPS to connect to KAWA. If it is the case, you will have to provide your ssl certificate (.crt) and your private key (.key) files. 
 
 > __DATA DIRECTORY:__ During the installation process, you will be asked to
 specify a data directory. Make sure you have enough space to store all your data. It will be the mountpoint for all your docker volumes. It is recommended to backup this directory once every day for disaster recovery. 
 
-It will contain 3 subdirectories,
+This data directory will contain 3 subdirectories,
 - one for postgres data: `pgdata`
 - one for clickhouse data `clickhousedata` 
-- one for the files that have been uploade by users in kawa: `kawadata`
+- one for the files that have been uploaded by users in kawa: `kawadata`
 
 
 ### 2.b Test login on the WEB UI
 
-4- Connect to the web server from a web browser to test the insatllation:
+4- Connect to the web server from a web browser to test the installation:
 
 By default, KAWA will listen on port 8080.
 Make sure to use the correct protocol HTTP vs HTTPS depending on what you configured.
@@ -120,5 +127,5 @@ password: changeme
 
 The initial confguration can be done following the documentation hosted here: [KYWY doc github](https://github.com/kawa-analytics/kywy-documentation).
 
-Follow the README and then:  [Initial setup Notebook](https://github.com/kawa-analytics/kywy-documentation/blob/main/05_initial_instance_configuration.ipynb) )
+Follow the README and then:  [Initial setup Notebook](https://github.com/kawa-analytics/kywy-documentation/blob/main/05_initial_instance_configuration.ipynb)
 
