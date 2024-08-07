@@ -40,9 +40,10 @@ services:
       KAWA_OAUTH2_CLIENT_SECRET: _OAUTH2_CLIENT_SECRET_
       DB_PASSWORD_FILE: /run/secrets/postgres-password
       KAWA_MASTER_KEY_FILE: /run/secrets/kawa-master-key
+      KAWA_CLICKHOUSE_IS_POST_23_DOT_8: true
 
   clickhouse:
-    image: "clickhouse/clickhouse-server:23.8.4-alpine"
+    image: "clickhouse/clickhouse-server:24.7.2-alpine"
     volumes:
       - clickhousedata:/var/lib/clickhouse
       - /tmp/clickhouse-server:/var/log/clickhouse-server
