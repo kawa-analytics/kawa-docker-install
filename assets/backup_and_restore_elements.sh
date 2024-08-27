@@ -11,8 +11,9 @@ PATH_TO_DUMPS=/tmp
 # Dump the database
 # ==================
 DUMP_FILE_NAME=$PATH_TO_DUMPS/kawa-db-$(date +%Y-%m-%d).sql
-sudo docker exec $DOCKER_CONTAINER_NAME pg_dump -U kawa postgres  > $DUMP_FILE_NAME
 
+## The data contained in the event table will not be dumped (just its structure)
+sudo docker exec $DOCKER_CONTAINER_NAME pg_dump -U kawa postgres --exclude-table-data=application_event > $DUMP_FILE_NAME
 
 # =====================
 # Restore the database
