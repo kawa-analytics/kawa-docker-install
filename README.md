@@ -16,7 +16,12 @@ Here is what will be installed:
   <img  src="readme-assets/docker-compose.png" alt="Docker compose network">
 </p>
 
+The script-runner is a separate container that will be used to run the python scripts that are uploaded to KAWA.
+The following diagram shows its architecture:
 
+<p align="center">
+  <img  src="readme-assets/script-runner.png" alt="Script runner architecture">
+</p>
 
 ## 1. Prerequisites
 
