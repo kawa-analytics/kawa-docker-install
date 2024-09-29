@@ -8,9 +8,9 @@ This setup is ideal for small to medium deployments.
 Persistence layers are implemented with Clickhouse and Postgres, they can easily be migrated out to standalone servers later on.
 
 
-It should be paired up with some scheduled backups of the persisted data, either through databases backups, either through disk snapshots. This is not covered by this documentation.
+It should be paired up with some scheduled backups of the persisted data, either through database backups, or through disk snapshots. This is not covered by this documentation.
 
-Here is what will be installed:
+Here is what will be installed with this docker-compose setup:
 
 <p align="center">
   <img  src="readme-assets/docker-compose.png" alt="Docker compose network">
@@ -23,12 +23,14 @@ The following diagram shows its architecture:
   <img  src="readme-assets/script-runner.png" alt="Script runner architecture">
 </p>
 
+
+
 ## 1. Prerequisites
 
 ### 1.a General requirements
 
 We currently support Ubuntu Systems 20.04, 22.04 and 24.04 LTS.
-Compatibilty with other linux ditributions should work fine but was not tested.
+Compatibility with other linux distributions should work fine but was not tested.
 
 Here is what you will need:
 
@@ -61,7 +63,7 @@ SSD is preferred. HDD is the second best option, SATA HDDs 7200 RPM will do. The
 ### 1.c OPEN ID Connect (Optional)
 
 If you wish to configure authentication and authorization with OIDC,
-please follow this guide (Example on OKTA) befor going through the installation procedure.
+please follow this guide (Example on OKTA) before going through the installation procedure.
 
 [Configure OIDC with OKTA.](/documentation/CONFIGURE_OIDC_WITH_OKTA.md)
 
@@ -130,7 +132,56 @@ password: changeme
 
 ## 3. Initial configuration
 
-The initial confguration can be done following the documentation hosted here: [KYWY doc github](https://github.com/kawa-analytics/kywy-documentation).
+The initial configuration can be done following the documentation hosted here: [KYWY doc github](https://github.com/kawa-analytics/kywy-documentation).
 
 Follow the README and then:  [Initial setup Notebook](https://github.com/kawa-analytics/kywy-documentation/blob/main/05_initial_instance_configuration.ipynb)
+
+
+
+## 4. Overview of the general architecture
+
+Here are all the components playing a role in the KAWA platform.
+
+<p align="center">
+  <img  src="readme-assets/high-level-architecture.png" alt="KAWA Components">
+</p>
+
+
+### 4.a The KAWA Server
+
+The KAWA Server is the main component of the KAWA Platform. It is packaged as a Docker image but is also available as an executable jar file.
+It was built using the java platform (JDK 21 LTS).
+
+It exposes HTTP APIs that allow users to:
+- Query data
+- Load data
+- Modify data assets
+
+Those APIs can be interacted with using either 
+- the KAWA Web GUI (Which can be downloaded from the KAWA Server), 
+- KAWA's official Python client (KYWY https://pypi.org/project/kywy/), 
+- Or directly using an HTTP client.
+
+Its state is entirely deported to an entity store (Postgres).
+The datasets it deals with (Both read and write) are stored on a Backend Enterprise Data Warehouse.
+
+All the analytics are prepared and secured on the KAWA server but executed on the underlying warehouse. The scalability and high availability of KAWA is guaranteed by the scalability of the warehouse.
+
+KAWA server can operate as a Master/Master deployment to ensure higher stability. 
+This server is a lightweight component that can handle up to 200 users with low RAM and CPU consumption.
+We recommend using between 4 and 16GB or RAM and 4 to 8 cores for production setups.
+
+
+### 4.b The KAWA Python Runtime
+
+The KAWA Python runtime is packaged using Docker. It can be executed using the GVisor runtime to ensure a good isolation between the running python applications and the host operating system (https://gvisor.dev/docs/).
+
+This component of the KAWA platform is necessary to enable all its python capabilities. One such runtime can be spawned per KAWA workspace.
+
+It interacts with:
+
+- The KAWA main server to receive script execution jobs, but also to retrieve and send data to the main warehouse (always through KAWA's APIs).
+- A source control server to retrieve the code to be executed. Scripts are packaged using PEX (https://pypi.org/project/pex/).
+
+Please refer to this repository for additional information regarding the Python capabilities of KAWA: https://github.com/kawa-analytics/kawa-toolkits.
 
