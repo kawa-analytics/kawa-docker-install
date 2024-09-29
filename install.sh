@@ -2,7 +2,7 @@
 set -e
 
 interactive="true"
-branch="1.26.x"
+branch="1.27.x"
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
