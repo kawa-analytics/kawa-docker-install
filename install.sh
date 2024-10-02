@@ -77,7 +77,7 @@ kawa_clickhouse_db_name="default"
 KAWA_DB_USER="kawa"
 KAWA_RUNNER_AES_KEY=$(head /dev/urandom | shasum -a 256 | cut -d ' ' -f 1)
 KAWA_ENCRYPTION_KEY=$(echo -n "${master_key}-key" | sha256sum | awk '{print substr($1, 1, 24)}')
-KAWA_ENCRYPTION_IV=$(echo -n "${master_key}-iv" | sha256sum | awk '{print substr($1, 1, 24)}')
+KAWA_ENCRYPTION_IV=$(echo -n "${master_key}-iv" | sha256sum | awk '{print substr($1, 1, 16)}')
 KAWA_ACCESS_TOKEN_SECRET=$(head -c 64 /dev/urandom | xxd -p | tr -d '\n')
 KAWA_REFRESH_TOKEN_SECRET=$(head -c 64 /dev/urandom | xxd -p | tr -d '\n')
 KAWA_POSTGRES_JDBC_URL="jdbc:postgresql://postgres:5432/postgres?currentSchema=kawa&user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
