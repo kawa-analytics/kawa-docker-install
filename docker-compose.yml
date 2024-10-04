@@ -1,6 +1,7 @@
 services:
   kawa-script-runner:
     image: ${KAWA_SCRIPT_RUNNER_IMAGE_PATH}
+    pull_policy: ${KAWA_SCRIPT_RUNNER_PULL_POLICY}
     ports:
       - 8815:8815
     environment:
@@ -12,6 +13,7 @@ services:
 
   kawa-server:
     image: ${KAWA_SERVER_IMAGE_PATH}
+    pull_policy: ${KAWA_SERVER_PULL_POLICY}
     ports:
       - 8080:8080
     volumes:
