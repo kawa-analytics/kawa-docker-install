@@ -50,8 +50,7 @@ kawa_user=5000:5000
 # Configure SSL
 if [ "$interactive" == "true" ]; then
   read -r -p "Do you want to use HTTPS to connect to KAWA? Y/[N] " USE_SSL
-  touch ./server.crt ./server.key
-
+  
   if [ "$USE_SSL" == 'Y' ] || [ "$USE_SSL" == 'y' ]; then
 
     read -r -p "Please specify the path to your certificate file: " path_to_crt_file
@@ -65,6 +64,8 @@ if [ "$interactive" == "true" ]; then
 
     KAWA_HTTPS=true
     KAWA_URL=https://${KAWA_SERVICE_NAME}:8080
+  else
+    touch ./server.crt ./server.key
   fi
 fi
 
