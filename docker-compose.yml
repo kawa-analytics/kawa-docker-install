@@ -18,12 +18,14 @@ services:
       - 8080:8080
     volumes:
       - kawadata:/home/kawa/user-files
+      - ./server.crt:/home/kawa/server.crt
+      - ./server.key:/home/kawa/server.key
     environment:
       KAWA_FILE_STORE_DIRECTORY: /home/kawa/user-files/local
       KAWA_SMTP_USERNAME: ${KAWA_SMTP_USERNAME}
       KAWA_SMTP_PASSWORD: ${KAWA_SMTP_PASSWORD}
-      KAWA_PATH_TO_SERVER_CERTIFICATE: server.crt
-      KAWA_PATH_TO_SERVER_PRIVATE_KEY: server.key
+      KAWA_PATH_TO_SERVER_CERTIFICATE: /home/kawa/server.crt
+      KAWA_PATH_TO_SERVER_PRIVATE_KEY: /home/kawa/server.key
       KAWA_BYPASS_VAULT: true
       KAWA_HTTPS: ${KAWA_HTTPS}
       KAWA_OAUTH2_CLIENT_SECRET: ${KAWA_OAUTH2_CLIENT_SECRET}
