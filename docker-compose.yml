@@ -1,0 +1,88 @@
+services:
+  kawa-script-runner:
+    image: ${KAWA_SCRIPT_RUNNER_IMAGE_PATH}
+    pull_policy: ${KAWA_SCRIPT_RUNNER_PULL_POLICY}
+    ports:
+      - 8815:8815
+    environment:
+      KAWA_URL: ${KAWA_URL}
+      KAWA_AUTOMATION_SERVER_AES_KEY: ${KAWA_RUNNER_AES_KEY}
+    env_file:
+      - path: kawa.script-runner.env
+        required: false
+
+  kawa-server:
+    image: ${KAWA_SERVER_IMAGE_PATH}
+    pull_policy: ${KAWA_SERVER_PULL_POLICY}
+    ports:
+      - 8080:8080
+    volumes:
+      - kawadata:/home/kawa/user-files
+    environment:
+      KAWA_FILE_STORE_DIRECTORY: /home/kawa/user-files/local
+      KAWA_SMTP_USERNAME: ${KAWA_SMTP_USERNAME}
+      KAWA_SMTP_PASSWORD: ${KAWA_SMTP_PASSWORD}
+      KAWA_PATH_TO_SERVER_CERTIFICATE: server.crt
+      KAWA_PATH_TO_SERVER_PRIVATE_KEY: server.key
+      KAWA_BYPASS_VAULT: true
+      KAWA_HTTPS: ${KAWA_HTTPS}
+      KAWA_OAUTH2_CLIENT_SECRET: ${KAWA_OAUTH2_CLIENT_SECRET}
+      KAWA_POSTGRES_JDBC_URL: ${KAWA_POSTGRES_JDBC_URL}
+      KAWA_CLICKHOUSE_JDBC_URL: ${KAWA_CLICKHOUSE_JDBC_URL}
+      KAWA_ACCESS_TOKEN_SECRET: ${KAWA_ACCESS_TOKEN_SECRET}
+      KAWA_REFRESH_TOKEN_SECRET: ${KAWA_REFRESH_TOKEN_SECRET}
+      KAWA_ENCRYPTION_IV: ${KAWA_ENCRYPTION_IV}
+      KAWA_ENCRYPTION_KEY: ${KAWA_ENCRYPTION_KEY}
+      KAWA_CLICKHOUSE_IS_POST_23_DOT_8: true
+      KAWA_CLICKHOUSE_ALLOW_LIVE_CONNECT: true
+      KAWA_CLICKHOUSE_INTERNAL_DATABASE: ${KAWA_CLICKHOUSE_INTERNAL_DATABASE}
+    env_file:
+      - path: kawa.server.env
+        required: false
+
+  clickhouse:
+    image: "clickhouse/clickhouse-server:24.7.2-alpine"
+    volumes:
+      - clickhousedata:/var/lib/clickhouse
+      - /tmp/clickhouse-server:/var/log/clickhouse-server
+      - ./assets/users.d:/etc/clickhouse-server/users.d
+      - ./assets/config.d:/etc/clickhouse-server/config.d
+    ports:
+      - 8123:8123
+    env_file:
+      - path: clickhouse.env
+        required: false
+
+  postgres:
+    image: "postgres:13.12-alpine"
+    environment:
+      POSTGRES_USER: ${KAWA_DB_USER}
+      POSTGRES_PASSWORD: ${KAWA_DB_PASSWORD}
+      POSTGRES_DB: kawa
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    env_file:
+      - path: postgres.env
+        required: false
+
+volumes:
+  pgdata:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${MOUNT_DIRECTORY}/pgdata
+      o: bind
+  clickhousedata:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${MOUNT_DIRECTORY}/clickhousedata
+      o: bind
+  kawadata:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${MOUNT_DIRECTORY}/kawadata
+      o: bind
