@@ -2,7 +2,7 @@
 set -e
 
 interactive="true"
-KAWA_BRANCH_NAME="develop"
+KAWA_BRANCH_NAME="1.27.x"
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
