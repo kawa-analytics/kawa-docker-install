@@ -86,6 +86,7 @@ KAWA_REFRESH_TOKEN_SECRET=$(head -c 64 /dev/urandom | xxd -p | tr -d '\n')
 KAWA_POSTGRES_JDBC_URL="jdbc:postgresql://postgres:5432/postgres?currentSchema=kawa&user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
 KAWA_CLICKHOUSE_JDBC_URL="jdbc:clickhouse://clickhouse:8123/${kawa_clickhouse_db_name}?user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
 KAWA_CLICKHOUSE_INTERNAL_DATABASE=$kawa_clickhouse_db_name
+KAWA_DOCKER_COMPOSE_NETWORK_NAME=kawa-network-$(tr -dc A-Za-z0-9 </dev/urandom | head -c 8)
 
 MOUNT_DIRECTORY="./data"
 rm -rf "$MOUNT_DIRECTORY"
