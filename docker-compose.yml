@@ -88,3 +88,8 @@ volumes:
       type: none
       device: ${MOUNT_DIRECTORY}/kawadata
       o: bind
+
+networks:
+  default:
+    name: ${KAWA_DOCKER_COMPOSE_NETWORK_NAME}
+    driver: bridge
