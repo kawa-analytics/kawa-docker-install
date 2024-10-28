@@ -41,6 +41,11 @@ services:
     env_file:
       - path: kawa.server.env
         required: false
+    logging:
+      driver: json-file
+      options:
+        max-size: 50m
+        max-file: 5
 
   clickhouse:
     image: "clickhouse/clickhouse-server:24.7.2-alpine"
@@ -92,4 +97,4 @@ volumes:
 networks:
   default:
     name: ${KAWA_DOCKER_COMPOSE_NETWORK_NAME}
-    driver: bridge
+    driver: ${KAWA_DOCKER_COMPOSE_NETWORK_DRIVER}
