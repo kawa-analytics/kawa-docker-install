@@ -2,22 +2,49 @@
 set -e
 
 interactive="true"
-KAWA_BRANCH_NAME="1.27.x"
+KAWA_BRANCH_NAME=""
+SKIP_DOCKER_LOGIN="false"
+ENV_FILE=""
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --interactive=*) interactive="${1#*=}" ;;
         --branch=*) KAWA_BRANCH_NAME="${1#*=}" ;;
+        --skip-docker-login=*) SKIP_DOCKER_LOGIN="${1#*=}" ;;
+        --env-file=*) ENV_FILE="${1#*=}" ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
 done
 
-# Perform docker login
-CREDENTIALS_FILE=./assets/kawa-registry.credentials
-DOCKER_TOKEN_USERNAME=$(cat $CREDENTIALS_FILE | head -1)
-DOCKER_TOKEN_PASSWORD=$(cat $CREDENTIALS_FILE | tail -n -1)
-echo "$DOCKER_TOKEN_PASSWORD"  | docker login registry.gitlab.com -u "$DOCKER_TOKEN_USERNAME" --password-stdin
+if [[ -n "$ENV_FILE" ]]; then
+    if [[ -f "$ENV_FILE" ]]; then
+        echo "Sourcing environment variables from $ENV_FILE"
+        set -a
+        source "$ENV_FILE"
+        set +a
+    else
+        echo "Error: Specified .env file does not exist: $ENV_FILE"
+        exit 1
+    fi
+fi
+
+if [[ -z "$KAWA_BRANCH_NAME" ]]; then
+    if [[ "$interactive" == "true" ]]; then
+        read -r -p "Branch name not provided. Please enter the branch name: " KAWA_BRANCH_NAME
+    else
+        KAWA_BRANCH_NAME="1.27.x"
+    fi
+fi
+
+if [[ "$SKIP_DOCKER_LOGIN" != "true" ]]; then
+    CREDENTIALS_FILE=./assets/kawa-registry.credentials
+    DOCKER_TOKEN_USERNAME=$(head -1 "$CREDENTIALS_FILE")
+    DOCKER_TOKEN_PASSWORD=$(tail -n -1 "$CREDENTIALS_FILE")
+    echo "$DOCKER_TOKEN_PASSWORD" | docker login registry.gitlab.com -u "$DOCKER_TOKEN_USERNAME" --password-stdin
+else
+    echo "Skipping Docker login as --skip-docker-login=true is set."
+fi
 
 KAWA_OAUTH2_CLIENT_SECRET=NA
 KAWA_SMTP_USERNAME=NA
@@ -42,8 +69,8 @@ if [ "$interactive" == "true" ]; then
 fi
 
 KAWA_SERVICE_NAME="kawa-server"
-KAWA_HTTPS=false
-KAWA_URL=http://${KAWA_SERVICE_NAME}:8080
+KAWA_SERVER_HTTPS=false
+KAWA_SERVER_URL=http://${KAWA_SERVICE_NAME}
 
 kawa_user=5000:5000
 
@@ -62,8 +89,8 @@ if [ "$interactive" == "true" ]; then
     chown $kawa_user ./server.crt ./server.key
     chmod 600 ./server.crt ./server.key
 
-    KAWA_HTTPS=true
-    KAWA_URL=https://${KAWA_SERVICE_NAME}:8080
+    KAWA_SERVER_HTTPS=true
+    KAWA_SERVER_URL=https://${KAWA_SERVICE_NAME}
   else
     touch ./server.crt ./server.key
   fi
@@ -88,6 +115,39 @@ KAWA_CLICKHOUSE_JDBC_URL="jdbc:clickhouse://clickhouse:8123/${kawa_clickhouse_db
 KAWA_CLICKHOUSE_INTERNAL_DATABASE=$kawa_clickhouse_db_name
 KAWA_DOCKER_COMPOSE_NETWORK_NAME=kawa-network-$(tr -dc A-Za-z0-9 </dev/urandom | head -c 8)
 
+# Configure Agent Runner
+if [ "$interactive" == "true" ]; then
+  read -r -p "Do you want to use Agent Runner? Y/[N] " USE_AGENT_RUNNER
+
+  if [ "$USE_AGENT_RUNNER" == 'Y' ] || [ "$USE_AGENT_RUNNER" == 'y' ]; then
+    read -r -p "Enter the ChromaDB Host (default: chromadb): " chromadb_host
+    chromadb_host=${chromadb_host:-chromadb}
+
+    read -r -p "Enter the ChromaDB Port (default: 8000): " chromadb_port
+    chromadb_port=${chromadb_port:-8000}
+
+    read -r -p "Enter the OpenAI API Key: " openai_api_key
+    read -r -p "Enter the Tavily API Key: " tavily_api_key
+    read -r -p "Enter the Mailgun API Key: " mailgun_api_key
+    read -r -p "Enter the Mailgun Domain (default: noreply.kawa-analytics.com): " mailgun_domain
+    mailgun_domain=${mailgun_domain:-noreply.kawa-analytics.com}
+
+    read -r -p "Enter the Llama Cloud API Key: " llama_cloud_api_key
+    read -r -p "Enter the Anthropic API Key: " anthropic_api_key
+
+    KAWA_AGENT_RUNNER_CHROMADB_HOST="${chromadb_host:-chromadb}"
+    KAWA_AGENT_RUNNER_CHROMADB_PORT="${chromadb_port:-8000}"
+    KAWA_AGENT_RUNNER_OPENAI_API_KEY="$openai_api_key"
+    KAWA_AGENT_RUNNER_TAVILY_API_KEY="$tavily_api_key"
+    KAWA_AGENT_RUNNER_MAILGUN_API_KEY="$mailgun_api_key"
+    KAWA_AGENT_RUNNER_MAILGUN_DOMAIN="${mailgun_domain:-noreply.kawa-analytics.com}"
+    KAWA_AGENT_RUNNER_LLAMA_CLOUD_API_KEY="$llama_cloud_api_key"
+    KAWA_AGENT_RUNNER_ANTHROPIC_API_KEY="$anthropic_api_key"
+  else
+    COMPOSE_PROFILES=default
+  fi
+fi
+
 MOUNT_DIRECTORY="./data"
 rm -rf "$MOUNT_DIRECTORY"
 
@@ -96,7 +156,7 @@ if [ "$interactive" == "true" ]; then
   read -r -p "Please specify the directory where you want to persist your data (will be created if it does not exist): " MOUNT_DIRECTORY
 fi
 
-mkdir -p "$MOUNT_DIRECTORY/pgdata" "$MOUNT_DIRECTORY/clickhousedata" "$MOUNT_DIRECTORY/kawadata"
+mkdir -p "$MOUNT_DIRECTORY/pgdata" "$MOUNT_DIRECTORY/clickhousedata" "$MOUNT_DIRECTORY/kawadata" "$MOUNT_DIRECTORY/chromadbdata"
 
 # If the environment variable is set, use it; otherwise, use the default from .env.defaults
 > .env

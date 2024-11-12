@@ -3,31 +3,54 @@ services:
     image: ${KAWA_SCRIPT_RUNNER_IMAGE_PATH}
     pull_policy: ${KAWA_SCRIPT_RUNNER_PULL_POLICY}
     ports:
-      - ${KAWA_SCRIPT_RUNNER_PORT}:8815
+      - ${KAWA_SCRIPT_RUNNER_EXTERNAL_PORT}:8815
     environment:
-      KAWA_URL: ${KAWA_URL}
+      KAWA_URL: ${KAWA_SERVER_URL}:${KAWA_SERVER_EXTERNAL_PORT}
       KAWA_AUTOMATION_SERVER_AES_KEY: ${KAWA_RUNNER_AES_KEY}
     env_file:
       - path: kawa.script-runner.env
+        required: false
+
+  kawai:
+    image: ${KAWA_AGENT_RUNNER_IMAGE_PATH}
+    pull_policy: ${KAWA_AGENT_RUNNER_PULL_POLICY}
+    profiles:
+      - agent-runner
+    environment:
+      KAWA_API_URL: ${KAWA_SERVER_URL}:${KAWA_SERVER_EXTERNAL_PORT}
+      KAWAI_PORT: ${KAWA_AGENT_RUNNER_EXTERNAL_PORT}
+      CHROMADB_HOST: ${KAWA_AGENT_RUNNER_CHROMADB_HOST}
+      CHROMADB_PORT: ${KAWA_AGENT_RUNNER_CHROMADB_PORT}
+      OPENAI_API_KEY: ${KAWA_AGENT_RUNNER_OPENAI_API_KEY}
+      TAVILY_API_KEY: ${KAWA_AGENT_RUNNER_TAVILY_API_KEY}
+      MAILGUN_API_KEY: ${KAWA_AGENT_RUNNER_MAILGUN_API_KEY}
+      MAILGUN_DOMAIN: ${KAWA_AGENT_RUNNER_MAILGUN_DOMAIN}
+      LLAMA_CLOUD_API_KEY: ${KAWA_AGENT_RUNNER_LLAMA_CLOUD_API_KEY}
+      ANTHROPIC_API_KEY: ${KAWA_AGENT_RUNNER_ANTHROPIC_API_KEY}
+    ports:
+      - ${KAWA_AGENT_RUNNER_EXTERNAL_PORT}:8001
+    env_file:
+      - path: kawa.agent-runner.env
         required: false
 
   kawa-server:
     image: ${KAWA_SERVER_IMAGE_PATH}
     pull_policy: ${KAWA_SERVER_PULL_POLICY}
     ports:
-      - ${KAWA_SERVER_PORT}:8080
+      - ${KAWA_SERVER_EXTERNAL_PORT}:8080
     volumes:
       - kawadata:/home/kawa/user-files
       - ./server.crt:/home/kawa/server.crt
       - ./server.key:/home/kawa/server.key
     environment:
+      LangchainConfigurationServerUrl: http://kawai:8001
       KAWA_FILE_STORE_DIRECTORY: /home/kawa/user-files/local
       KAWA_SMTP_USERNAME: ${KAWA_SMTP_USERNAME}
       KAWA_SMTP_PASSWORD: ${KAWA_SMTP_PASSWORD}
       KAWA_PATH_TO_SERVER_CERTIFICATE: /home/kawa/server.crt
       KAWA_PATH_TO_SERVER_PRIVATE_KEY: /home/kawa/server.key
       KAWA_BYPASS_VAULT: true
-      KAWA_HTTPS: ${KAWA_HTTPS}
+      KAWA_HTTPS: ${KAWA_SERVER_HTTPS}
       KAWA_OAUTH2_CLIENT_SECRET: ${KAWA_OAUTH2_CLIENT_SECRET}
       KAWA_POSTGRES_JDBC_URL: ${KAWA_POSTGRES_JDBC_URL}
       KAWA_CLICKHOUSE_JDBC_URL: ${KAWA_CLICKHOUSE_JDBC_URL}
@@ -55,7 +78,7 @@ services:
       - ./assets/users.d:/etc/clickhouse-server/users.d
       - ./assets/config.d:/etc/clickhouse-server/config.d
     ports:
-      - ${CLICKHOUSE_PORT}:8123
+      - ${CLICKHOUSE_EXTERNAL_PORT}:8123
     env_file:
       - path: clickhouse.env
         required: false
@@ -69,12 +92,29 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - ${POSTGRES_PORT}:5432
+      - ${POSTGRES_EXTERNAL_PORT}:5432
     env_file:
       - path: postgres.env
         required: false
 
+  chromadb:
+    image: chromadb/chroma:0.5.5
+    volumes:
+      - chromadbdata:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+      - ANONYMIZED_TELEMETRY=${ANONYMIZED_TELEMETRY:-TRUE}
+    ports:
+      - 8000:8000
+
 volumes:
+  chromadbdata:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${MOUNT_DIRECTORY}/chromadbdata
+      o: bind
   pgdata:
     driver: local
     driver_opts:
