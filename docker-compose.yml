@@ -43,7 +43,7 @@ services:
       - ./server.crt:/home/kawa/server.crt
       - ./server.key:/home/kawa/server.key
     environment:
-      LangchainConfigurationServerUrl: http://kawai:8001
+      KAWA_LANGCHAIN_CONFIGURATION: ${KAWA_SERVER_LANGCHAIN_CONFIGURATION}
       KAWA_FILE_STORE_DIRECTORY: /home/kawa/user-files/local
       KAWA_SMTP_USERNAME: ${KAWA_SMTP_USERNAME}
       KAWA_SMTP_PASSWORD: ${KAWA_SMTP_PASSWORD}
@@ -107,6 +107,9 @@ services:
       - ANONYMIZED_TELEMETRY=${ANONYMIZED_TELEMETRY:-TRUE}
     ports:
       - 8000:8000
+    env_file:
+      - path: chromadb.env
+        required: false
 
 volumes:
   chromadbdata:
