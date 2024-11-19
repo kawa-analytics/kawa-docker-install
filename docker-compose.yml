@@ -43,7 +43,7 @@ services:
       - ./server.crt:/home/kawa/server.crt
       - ./server.key:/home/kawa/server.key
     environment:
-      LangchainConfigurationServerUrl: http://kawai:8001
+      KAWA_LANGCHAIN_CONFIGURATION: ${KAWA_SERVER_LANGCHAIN_CONFIGURATION}
       KAWA_FILE_STORE_DIRECTORY: /home/kawa/user-files/local
       KAWA_SMTP_USERNAME: ${KAWA_SMTP_USERNAME}
       KAWA_SMTP_PASSWORD: ${KAWA_SMTP_PASSWORD}
@@ -97,24 +97,7 @@ services:
       - path: postgres.env
         required: false
 
-  chromadb:
-    image: chromadb/chroma:0.5.5
-    volumes:
-      - chromadbdata:/chroma/chroma
-    environment:
-      - IS_PERSISTENT=TRUE
-      - PERSIST_DIRECTORY=/chroma/chroma
-      - ANONYMIZED_TELEMETRY=${ANONYMIZED_TELEMETRY:-TRUE}
-    ports:
-      - 8000:8000
-
 volumes:
-  chromadbdata:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${MOUNT_DIRECTORY}/chromadbdata
-      o: bind
   pgdata:
     driver: local
     driver_opts:
