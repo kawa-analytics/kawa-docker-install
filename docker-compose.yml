@@ -5,7 +5,7 @@ services:
     ports:
       - ${KAWA_SCRIPT_RUNNER_EXTERNAL_PORT}:8815
     environment:
-      KAWA_URL: ${KAWA_SERVER_URL}:${KAWA_SERVER_EXTERNAL_PORT}
+      KAWA_URL: ${KAWA_SERVER_URL}:8080
       KAWA_AUTOMATION_SERVER_AES_KEY: ${KAWA_RUNNER_AES_KEY}
     env_file:
       - path: kawa.script-runner.env
@@ -17,7 +17,7 @@ services:
     profiles:
       - agent-runner
     environment:
-      KAWA_API_URL: ${KAWA_SERVER_URL}:${KAWA_SERVER_EXTERNAL_PORT}
+      KAWA_API_URL: ${KAWA_SERVER_URL}:8080
       KAWAI_PORT: ${KAWA_AGENT_RUNNER_EXTERNAL_PORT}
       CHROMADB_HOST: ${KAWA_AGENT_RUNNER_CHROMADB_HOST}
       CHROMADB_PORT: ${KAWA_AGENT_RUNNER_CHROMADB_PORT}
