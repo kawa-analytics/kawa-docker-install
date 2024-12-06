@@ -33,7 +33,7 @@ if [[ -z "$KAWA_BRANCH_NAME" ]]; then
     if [[ "$interactive" == "true" ]]; then
         read -r -p "Branch name not provided. Please enter the branch name: " KAWA_BRANCH_NAME
     else
-        KAWA_BRANCH_NAME="1.27.x"
+        KAWA_BRANCH_NAME="1.28.x"
     fi
 fi
 
