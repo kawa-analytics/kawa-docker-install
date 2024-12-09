@@ -6,7 +6,7 @@
     </profiles>
     <users>
         <kawa>
-<password_sha256_hex>ae023342973c306489e40e300065fcd843e9904a8a6d2bf006b54078a2771534</password_sha256_hex>
+<password_sha256_hex>9009eda05e39026fbd778844e0f14693736120f387a1fb53e10c000dc4e9923c</password_sha256_hex>
             <networks>
                 <ip>::/0</ip>
             </networks>
