@@ -120,12 +120,6 @@ if [ "$interactive" == "true" ]; then
   read -r -p "Do you want to use Agent Runner? Y/[N] " USE_AGENT_RUNNER
 
   if [ "$USE_AGENT_RUNNER" == 'Y' ] || [ "$USE_AGENT_RUNNER" == 'y' ]; then
-    read -r -p "Enter the ChromaDB Host (default: chromadb): " chromadb_host
-    chromadb_host=${chromadb_host:-chromadb}
-
-    read -r -p "Enter the ChromaDB Port (default: 8000): " chromadb_port
-    chromadb_port=${chromadb_port:-8000}
-
     read -r -p "Enter the OpenAI API Key: " openai_api_key
     read -r -p "Enter the Tavily API Key: " tavily_api_key
     read -r -p "Enter the Mailgun API Key: " mailgun_api_key
@@ -135,8 +129,6 @@ if [ "$interactive" == "true" ]; then
     read -r -p "Enter the Llama Cloud API Key: " llama_cloud_api_key
     read -r -p "Enter the Anthropic API Key: " anthropic_api_key
 
-    KAWA_AGENT_RUNNER_CHROMADB_HOST="${chromadb_host:-chromadb}"
-    KAWA_AGENT_RUNNER_CHROMADB_PORT="${chromadb_port:-8000}"
     KAWA_AGENT_RUNNER_OPENAI_API_KEY="$openai_api_key"
     KAWA_AGENT_RUNNER_TAVILY_API_KEY="$tavily_api_key"
     KAWA_AGENT_RUNNER_MAILGUN_API_KEY="$mailgun_api_key"
