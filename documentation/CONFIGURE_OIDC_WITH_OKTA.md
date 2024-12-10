@@ -31,15 +31,8 @@ Please tick both `Authorization Code` and `Refresh Token`. (Refresh Token is not
 
 ### 1.b Other settings
 
-Please specify the sign-in redirect URL:
-
-`https://{your kawa domain}/authentication/login?credentialType=OAUTH2_TOKEN`. Make sure to specify the correct kawa domain and port if needed.
-
+The sign-in and sign-out url are ignored.
 It is recommended to use a limitation of access to specific groups.
-
-<p align="center">
-  <img  src="assets/other-settings.png" alt="Configuration for new app">
-</p>
 
 When you are done, click on Save.
 
