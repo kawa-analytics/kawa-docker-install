@@ -9,7 +9,7 @@ ENV_FILE=""
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --interactive=*) interactive="${1#*=}" ;;
-        --branch=*) KAWA_BRANCH_NAME="${1#*=}" ;;
+        --version=*) KAWA_BRANCH_NAME="${1#*=}" ;;
         --skip-docker-login=*) SKIP_DOCKER_LOGIN="${1#*=}" ;;
         --env-file=*) ENV_FILE="${1#*=}" ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
@@ -29,13 +29,22 @@ if [[ -n "$ENV_FILE" ]]; then
     fi
 fi
 
+kawa_latest_version="1.28.x"
+
 if [[ -z "$KAWA_BRANCH_NAME" ]]; then
     if [[ "$interactive" == "true" ]]; then
-        read -r -p "Branch name not provided. Please enter the branch name: " KAWA_BRANCH_NAME
+        read -r -p "Do you want the latest version? Y/[N] " use_latest_version
+          if [ "$use_latest_version" == 'Y' ] || [ "$use_latest_version" == 'y' ]; then
+              KAWA_BRANCH_NAME=$kawa_latest_version
+          else
+            read -r -p "Which version do you want to use? " KAWA_BRANCH_NAME
+          fi
     else
-        KAWA_BRANCH_NAME="1.28.x"
+      KAWA_BRANCH_NAME=$kawa_latest_version
     fi
 fi
+
+echo $KAWA_BRANCH_NAME
 
 if [[ "$SKIP_DOCKER_LOGIN" != "true" ]]; then
     CREDENTIALS_FILE=./assets/kawa-registry.credentials
@@ -98,14 +107,14 @@ fi
 
 # Update the clickhouse user override file, it accepts the sha256 of the password
 KAWA_DB_PASSWORD=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
-kawa_hashed_db_password=$(echo -n "$KAWA_DB_PASSWORD" | shasum -a 256 | cut -d ' ' -f 1)
+kawa_hashed_db_password=$(echo -n "$KAWA_DB_PASSWORD" | sha256sum -a 256 | cut -d ' ' -f 1)
 sed -i "s/.*password_sha256.*/<password_sha256_hex>$kawa_hashed_db_password<\/password_sha256_hex>/g" ./assets/users.d/kawa.xml
 
 master_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
 kawa_clickhouse_db_name="default"
 
 KAWA_DB_USER="kawa"
-KAWA_RUNNER_AES_KEY=$(head /dev/urandom | shasum -a 256 | cut -d ' ' -f 1)
+KAWA_RUNNER_AES_KEY=$(head /dev/urandom | sha256sum -a 256 | cut -d ' ' -f 1)
 KAWA_ENCRYPTION_KEY=$(echo -n "${master_key}-key" | sha256sum | awk '{print substr($1, 1, 24)}')
 KAWA_ENCRYPTION_IV=$(echo -n "${master_key}-iv" | sha256sum | awk '{print substr($1, 1, 16)}')
 KAWA_ACCESS_TOKEN_SECRET=$(head -c 64 /dev/urandom | xxd -p | tr -d '\n')
