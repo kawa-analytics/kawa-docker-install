@@ -43,6 +43,7 @@ services:
       - ./server.crt:/home/kawa/server.crt
       - ./server.key:/home/kawa/server.key
     environment:
+      KAWA_GLOBAL_RUNNER_AES_KEY: ${KAWA_RUNNER_AES_KEY}
       KAWA_LANGCHAIN_CONFIGURATION: ${KAWA_SERVER_LANGCHAIN_CONFIGURATION}
       KAWA_FILE_STORE_DIRECTORY: /home/kawa/user-files/local
       KAWA_SMTP_USERNAME: ${KAWA_SMTP_USERNAME}
