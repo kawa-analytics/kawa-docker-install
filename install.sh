@@ -124,31 +124,6 @@ KAWA_CLICKHOUSE_JDBC_URL="jdbc:clickhouse://clickhouse:8123/${kawa_clickhouse_db
 KAWA_CLICKHOUSE_INTERNAL_DATABASE=$kawa_clickhouse_db_name
 KAWA_DOCKER_COMPOSE_NETWORK_NAME=kawa-network-$(tr -dc A-Za-z0-9 </dev/urandom | head -c 8)
 
-# Configure Agent Runner
-if [ "$interactive" == "true" ]; then
-  read -r -p "Do you want to use Agent Runner? Y/[N] " USE_AGENT_RUNNER
-
-  if [ "$USE_AGENT_RUNNER" == 'Y' ] || [ "$USE_AGENT_RUNNER" == 'y' ]; then
-    read -r -p "Enter the OpenAI API Key: " openai_api_key
-    read -r -p "Enter the Tavily API Key: " tavily_api_key
-    read -r -p "Enter the Mailgun API Key: " mailgun_api_key
-    read -r -p "Enter the Mailgun Domain (default: noreply.kawa-analytics.com): " mailgun_domain
-    mailgun_domain=${mailgun_domain:-noreply.kawa-analytics.com}
-
-    read -r -p "Enter the Llama Cloud API Key: " llama_cloud_api_key
-    read -r -p "Enter the Anthropic API Key: " anthropic_api_key
-
-    KAWA_AGENT_RUNNER_OPENAI_API_KEY="$openai_api_key"
-    KAWA_AGENT_RUNNER_TAVILY_API_KEY="$tavily_api_key"
-    KAWA_AGENT_RUNNER_MAILGUN_API_KEY="$mailgun_api_key"
-    KAWA_AGENT_RUNNER_MAILGUN_DOMAIN="${mailgun_domain:-noreply.kawa-analytics.com}"
-    KAWA_AGENT_RUNNER_LLAMA_CLOUD_API_KEY="$llama_cloud_api_key"
-    KAWA_AGENT_RUNNER_ANTHROPIC_API_KEY="$anthropic_api_key"
-  else
-    COMPOSE_PROFILES=default
-  fi
-fi
-
 MOUNT_DIRECTORY="./data"
 rm -rf "$MOUNT_DIRECTORY"
 

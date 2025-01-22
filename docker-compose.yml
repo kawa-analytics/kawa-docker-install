@@ -10,29 +10,7 @@ services:
     env_file:
       - path: kawa.script-runner.env
         required: false
-
-  kawai:
-    image: ${KAWA_AGENT_RUNNER_IMAGE_PATH}
-    pull_policy: ${KAWA_AGENT_RUNNER_PULL_POLICY}
-    profiles:
-      - agent-runner
-    environment:
-      KAWA_API_URL: ${KAWA_SERVER_URL}:8080
-      KAWAI_PORT: ${KAWA_AGENT_RUNNER_EXTERNAL_PORT}
-      CHROMADB_HOST: ${KAWA_AGENT_RUNNER_CHROMADB_HOST}
-      CHROMADB_PORT: ${KAWA_AGENT_RUNNER_CHROMADB_PORT}
-      OPENAI_API_KEY: ${KAWA_AGENT_RUNNER_OPENAI_API_KEY}
-      TAVILY_API_KEY: ${KAWA_AGENT_RUNNER_TAVILY_API_KEY}
-      MAILGUN_API_KEY: ${KAWA_AGENT_RUNNER_MAILGUN_API_KEY}
-      MAILGUN_DOMAIN: ${KAWA_AGENT_RUNNER_MAILGUN_DOMAIN}
-      LLAMA_CLOUD_API_KEY: ${KAWA_AGENT_RUNNER_LLAMA_CLOUD_API_KEY}
-      ANTHROPIC_API_KEY: ${KAWA_AGENT_RUNNER_ANTHROPIC_API_KEY}
-    ports:
-      - ${KAWA_AGENT_RUNNER_EXTERNAL_PORT}:8001
-    env_file:
-      - path: kawa.agent-runner.env
-        required: false
-
+  
   kawa-server:
     image: ${KAWA_SERVER_IMAGE_PATH}
     pull_policy: ${KAWA_SERVER_PULL_POLICY}
@@ -44,6 +22,7 @@ services:
       - ./server.key:/home/kawa/server.key
     environment:
       KAWA_GLOBAL_RUNNER_AES_KEY: ${KAWA_RUNNER_AES_KEY}
+      KAWA_DEFAULT_RUNNER_AES_KEY: ${KAWA_RUNNER_AES_KEY}
       KAWA_LANGCHAIN_CONFIGURATION: ${KAWA_SERVER_LANGCHAIN_CONFIGURATION}
       KAWA_FILE_STORE_DIRECTORY: /home/kawa/user-files/local
       KAWA_SMTP_USERNAME: ${KAWA_SMTP_USERNAME}
@@ -72,7 +51,7 @@ services:
         max-file: 5
 
   clickhouse:
-    image: "clickhouse/clickhouse-server:24.7.2-alpine"
+    image: "clickhouse/clickhouse-server:24.8.12-alpine"
     volumes:
       - clickhousedata:/var/lib/clickhouse
       - /tmp/clickhouse-server:/var/log/clickhouse-server
