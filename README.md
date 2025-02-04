@@ -185,3 +185,21 @@ It interacts with:
 
 Please refer to this repository for additional information regarding the Python capabilities of KAWA: https://github.com/kawa-analytics/kawa-toolkits.
 
+
+## 5 Main Environment variables
+
+| Variable name                              | Default  | Description  |
+| :-------------------------                 | :------: | :----        |
+| `KAWA_FILE_STORE_AS_DEFAULT`               |   True   | If set to True, version control system will always be the KAWA file store |
+| `KAWA_ALLOW_GENERATIVE_AI_BY_DEFAULT`      |   True   | If set to True, all new users will be allowed to use AI features (without admin validation) |
+| `KAWA_DATE_TIME_FORMAT_PRECISION`          |   3      | Date time precision for clickhouse storage - 3: ms, 6: us, 9:ns. Cannot be changed once set |
+| `KAWA_ENABLE_SIMILARITY`                   |   False  | If set to True, KAWA will compute similarities to suggest joins. Costly in terms of computation resources |
+| `KAWA_POSTGRES_POOL_SIZE`                  |   30     | The size of the connection pool the the postgres databasse (max num. of parallel connections) |
+| `KAWA_NB_DOWN_SAMPLING_POINTS`             |   400    | The max number of data points when using down sampling on time series  |
+| `KAWA_HTTPS`                               |   False  | Will terminate TLS connection on KAWA server |
+
+
+
+
+
+
