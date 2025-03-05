@@ -41,7 +41,7 @@ SHOW wal_sender_timeout
 
 ### 2.1 Configuration of Aurora
 
-Run this script __in the database__ that you wish to replicate.
+Run this script <strong><span style="color: red;">in the database</span></strong> that you wish to replicate.
 Indicate a password of your choice and the schema you wish to replicate.
 
 ```sql
