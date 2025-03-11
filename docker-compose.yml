@@ -59,8 +59,7 @@ services:
       - ./assets/config.d:/etc/clickhouse-server/config.d
     ports:
       - ${CLICKHOUSE_EXTERNAL_PORT}:8123
-      - 9000:9000
-      - 9440:9440
+      - ${CLICKHOUSE_EXTERNAL_TCP_PORT}:9000
     extra_hosts:
       - "host.docker.internal:host-gateway"
     env_file:
