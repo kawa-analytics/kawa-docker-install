@@ -186,7 +186,9 @@ It interacts with:
 Please refer to this repository for additional information regarding the Python capabilities of KAWA: https://github.com/kawa-analytics/kawa-toolkits.
 
 
-## 5 Main Environment variables
+## 5 Configuration
+
+### 5.1 Main environment variables
 
 | Variable name                              | Default  | Description  |
 | :-------------------------                 | :------: | :----        |
@@ -200,6 +202,70 @@ Please refer to this repository for additional information regarding the Python 
 
 
 
+ ### 5.2 Main configuration objects
 
+Those configuration objects can be set via the Python SDK (kywy: https://github.com/kawa-analytics/kywy-documentation)
+
+The below snippet can be executed from an admin account to modify the 
+server configuration:
+
+```python
+from kywy.client.kawa_client import KawaClient as K
+
+kawa = K.load_client_from_environment()
+cmd = kawa.commands
+cmd.replace_configuration('... Configuration Type ...', {
+    'parameter1': 'value1',
+    'parameterN': 'valueN'
+})
+
+```
+
+#### 5.2.1 OpenAiConfiguration
+
+__Configuration Type:__ `OpenAiConfiguration`
+
+__Parameters:__
+
+
+| Parameter name              | Default  | Description  |
+| :-------------------------  | :------: | :----        |
+| `activated`                 | False | Set it to True to enable the use of generative AI for KAWA
+| `openAiApiKey`              | Empty    | The Open AI API KEY 
+| `baseUrl`                   | https://api.openai.com/v1 | The base URL for the open ai API
+| `completionApiUrl`          | Empty    | If set, will be used for the completion URL. Otherwise will use `${baseUrl}/chat/completions`
+| `additionalHeaders`         | Empty    | Additional headers to forward to the completion API. The format is: `HEADER1=VAL1,HEADER2=VAL2` etc
+| `authenticatesWithKerberos` | False | Will authenticate to the API using Kerberos if set to True
+| `supportsStreaming`         | True | If you API does not support streaming (SSE), set this to False
+
+
+
+
+#### 5.2.2 ApiKeyConfiguration
+
+__Configuration Type:__ `ApiKeyConfiguration`
+
+__Parameters:__
+
+| Parameter name              | Default  | Description  |
+| :-------------------------  | :------: | :----        |
+| `maximumLifespanInDays`     | 365      | Set it the maximum lifespan in days you want to API key to be valid for
+| `defaultLifespanInDays`     | 30       | This will be the default lifespan when creating new API keys
+
+
+#### 5.2.3 GlobalAuthenticationConfiguration
+
+__Configuration Type:__ `GlobalAuthenticationConfiguration`
+
+__Parameters:__
+
+| Parameter name              | Default  | Description  |
+| :-------------------------  | :------: | :----        |
+| `authorizedDomains`         | None     | You can specify a list of domains that can authenticate on the application. None means no restrictions.
+| `setupAdminUniqueId`        | `setup-admin@kawa.io` | The unique id of the setup admin.
+| `blockPrincipalsOnMultipleLoginFailure`  | True | Will block users who had too many failed login attempts.
+| `loginFailuresCountToBlockPrincipals` | 5 | Users will be blocked after this amount of failed login attempts.
+| `authorizedPrincipalEmails` | None | Only those users can login. this is a white list. If none is set, no restriction is enforced.
+| `authenticationMethod` | `JWT` | Will use internal JWT to authenticate users. Their identity will be managed and verified by KAWA. Other possible values are `KERBEROS`, `SAML` and `HEADER`
 
 
