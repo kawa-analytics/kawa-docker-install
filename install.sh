@@ -29,7 +29,7 @@ if [[ -n "$ENV_FILE" ]]; then
     fi
 fi
 
-kawa_latest_version="1.29.x"
+kawa_latest_version="1.30.x"
 
 if [[ -z "$KAWA_BRANCH_NAME" ]]; then
     if [[ "$interactive" == "true" ]]; then
