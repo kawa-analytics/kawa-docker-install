@@ -62,7 +62,7 @@ KAWA_SMTP_PASSWORD=NA
 # Configure warehouse
 # Clickhouse or Snowflake
 if [ "$interactive" == "true" ]; then
-  read -r -p "Do you want to connect to an external snowflake warehouse? " USE_SNOWFLAKE
+  read -r -p "Do you want to connect to an external snowflake warehouse? Y/[N] " USE_SNOWFLAKE
   if [ "$USE_SNOWFLAKE" == 'Y' ] || [ "$USE_SNOWFLAKE" == 'y' ]; then
       KAWA_WAREHOUSE_TYPE='SNOWFLAKE'
       read -r -p "Please specify the snowflake user (Read only): " KAWA_SNOWFLAKE_USER
@@ -71,7 +71,7 @@ if [ "$interactive" == "true" ]; then
       read -r -p "Please specify the snowflake account (Read only): " KAWA_SNOWFLAKE_ACCOUNT
 
 
-      read -r -p "Do you want to configure write back in Snowflake? " CONFIGURE_SNOWFLAKE_WRITE_BACK
+      read -r -p "Do you want to configure write back in Snowflake? Y/[N] " CONFIGURE_SNOWFLAKE_WRITE_BACK
       if [ "$CONFIGURE_SNOWFLAKE_WRITE_BACK" == 'Y' ] || [ "$CONFIGURE_SNOWFLAKE_WRITE_BACK" == 'y' ]; then
         read -r -p "Please specify the snowflake user (Read/Write): " KAWA_SNOWFLAKE_WRITER_USER
         read -r -p "Please specify the snowflake password (Read/Write): " KAWA_SNOWFLAKE_WRITER_PASSWORD
