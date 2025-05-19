@@ -59,6 +59,23 @@ KAWA_OAUTH2_CLIENT_SECRET=NA
 KAWA_SMTP_USERNAME=NA
 KAWA_SMTP_PASSWORD=NA
 
+# Configure warehouse
+# Clickhouse or Snowflake
+if [ "$interactive" == "true" ]; then
+  read -r -p "Do you want to connect to an external snowflake warehouse? " USE_SNOWFLAKE
+  if [ "$USE_SNOWFLAKE" == 'Y' ] || [ "$USE_SNOWFLAKE" == 'y' ]; then
+      KAWA_WAREHOUSE_TYPE='SNOWFLAKE'
+      read -r -p "Please specify the snowflake user (Read only)" KAWA_SNOWFLAKE_USER
+      read -r -p "Please specify the snowflake password (Read only)" KAWA_SNOWFLAKE_PASSWORD
+      read -r -p "Please specify the snowflake warehouse (Read only)" KAWA_SNOWFLAKE_WAREHOUSE
+      read -r -p "Please specify the snowflake account (Read only)" KAWA_SNOWFLAKE_ACCOUNT
+  fi
+  else
+    KAWA_WAREHOUSE_TYPE='CLICKHOUSE'
+  fi
+fi
+
+
 # Configure smtp
 if [ "$interactive" == "true" ]; then
   read -r -p "Do you want to setup a connection with a SMTP server? Y/[N] " SETUP_SMTP
