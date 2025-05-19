@@ -69,6 +69,18 @@ if [ "$interactive" == "true" ]; then
       read -r -p "Please specify the snowflake password (Read only): " KAWA_SNOWFLAKE_PASSWORD
       read -r -p "Please specify the snowflake warehouse (Read only): " KAWA_SNOWFLAKE_WAREHOUSE
       read -r -p "Please specify the snowflake account (Read only): " KAWA_SNOWFLAKE_ACCOUNT
+
+
+      read -r -p "Do you want to configure write back in Snowflake? " CONFIGURE_SNOWFLAKE_WRITE_BACK
+      if [ "$CONFIGURE_SNOWFLAKE_WRITE_BACK" == 'Y' ] || [ "$CONFIGURE_SNOWFLAKE_WRITE_BACK" == 'y' ]; then
+        read -r -p "Please specify the snowflake user (Read/Write): " KAWA_SNOWFLAKE_WRITER_USER
+        read -r -p "Please specify the snowflake password (Read/Write): " KAWA_SNOWFLAKE_WRITER_PASSWORD
+        read -r -p "Please specify the snowflake warehouse (Read/Write): " KAWA_SNOWFLAKE_WRITER_WAREHOUSE
+        read -r -p "Please specify the snowflake account (Read/Write): " KAWA_SNOWFLAKE_WRITER_ACCOUNT
+        read -r -p "Please specify the database where kawa will write (Must exist): " KAWA_SNOWFLAKE_WRITER_CATALOG
+        read -r -p "Please specify the schema where kawa will write (Must exist): " KAWA_SNOWFLAKE_WRITER_SCHEMA
+      fi    
+
   else
     KAWA_WAREHOUSE_TYPE='CLICKHOUSE'
   fi
