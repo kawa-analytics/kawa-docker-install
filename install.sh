@@ -180,4 +180,9 @@ while IFS='=' read -r var_name default_value || [[ -n "$var_name" ]]; do
   echo "$var_name=$value" >> .env
 done < .env.defaults
 
-echo "Installation complete. To start the server, run: sudo docker compose up -d."
+if [ "$KAWA_WAREHOUSE_TYPE" == "CLICKHOUSE" ]; then
+  echo "Installation complete. To start the server, run: sudo docker compose  --profile clickhouse up  -d."
+else
+  echo "Installation complete. To start the server, run: sudo docker compose up -d."
+fi
+
