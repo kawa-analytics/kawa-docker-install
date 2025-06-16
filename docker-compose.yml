@@ -70,6 +70,7 @@ services:
       - clickhouse
     volumes:
       - clickhousedata:/var/lib/clickhouse
+      - ./assets/backup:/backups
       - /tmp/clickhouse-server:/var/log/clickhouse-server
       - ./assets/users.d:/etc/clickhouse-server/users.d
       - ./assets/config.d:/etc/clickhouse-server/config.d
