@@ -142,12 +142,17 @@ master_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
 kawa_clickhouse_db_name="default"
 
 KAWA_DB_USER="kawa"
+KAWA_SERVER_DB_NAME=kawa
+KAWA_SERVER_SCHEMA_NAME=kawa
+KAWA_WORKFLOW_DB_NAME=workflow
+KAWA_WORKFLOW_SCHEMA_NAME=workflow
 KAWA_RUNNER_AES_KEY=$(head /dev/urandom | sha256sum | cut -d ' ' -f 1)
 KAWA_ENCRYPTION_KEY=$(echo -n "${master_key}-key" | sha256sum | awk '{print substr($1, 1, 24)}')
 KAWA_ENCRYPTION_IV=$(echo -n "${master_key}-iv" | sha256sum | awk '{print substr($1, 1, 16)}')
 KAWA_ACCESS_TOKEN_SECRET=$(head -c 64 /dev/urandom | xxd -p | tr -d '\n')
 KAWA_REFRESH_TOKEN_SECRET=$(head -c 64 /dev/urandom | xxd -p | tr -d '\n')
-KAWA_POSTGRES_JDBC_URL="jdbc:postgresql://postgres:5432/postgres?currentSchema=kawa&user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
+KAWA_POSTGRES_JDBC_URL="jdbc:postgresql://postgres:5432/${KAWA_SERVER_DB_NAME}?currentSchema=${KAWA_SERVER_SCHEMA_NAME}&user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
+KAWA_WORKFLOW_JDBC_URL="jdbc:postgresql://postgres:5432/${KAWA_WORKFLOW_DB_NAME}?currentSchema=${KAWA_WORKFLOW_SCHEMA_NAME}&user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
 KAWA_CLICKHOUSE_JDBC_URL="jdbc:clickhouse://clickhouse:8123/${kawa_clickhouse_db_name}?user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
 KAWA_CLICKHOUSE_INTERNAL_DATABASE=$kawa_clickhouse_db_name
 KAWA_DOCKER_COMPOSE_NETWORK_NAME=kawa-network-$(tr -dc A-Za-z0-9 </dev/urandom | head -c 8)

@@ -64,6 +64,17 @@ services:
         max-size: 50m
         max-file: 5
 
+  kawa-workflow:
+    image: ${KAWA_WORKFLOW_IMAGE_PATH}
+    pull_policy: ${KAWA_WORKFLOW_PULL_POLICY}
+    environment:
+      KAWA_WORKFLOW_JDBC_URL: ${KAWA_WORKFLOW_JDBC_URL}
+    ports:
+      - ${KAWA_WORKFLOW_EXTERNAL_PORT}:8088
+    env_file:
+      - path: kawa.workflow.env
+        required: false
+
   clickhouse:
     image: "clickhouse/clickhouse-server:24.8.12-alpine"
     profiles:
@@ -88,9 +99,12 @@ services:
     environment:
       POSTGRES_USER: ${KAWA_DB_USER}
       POSTGRES_PASSWORD: ${KAWA_DB_PASSWORD}
-      POSTGRES_DB: kawa
+      POSTGRES_DB: ${KAWA_SERVER_DB_NAME}
+      KAWA_WORKFLOW_DB_NAME: ${KAWA_WORKFLOW_DB_NAME}
+      KAWA_WORKFLOW_SCHEMA_NAME: ${KAWA_WORKFLOW_SCHEMA_NAME}
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh
     ports:
       - ${POSTGRES_EXTERNAL_PORT}:5432
     env_file:
