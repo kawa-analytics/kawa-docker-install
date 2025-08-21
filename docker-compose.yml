@@ -7,6 +7,7 @@ services:
     environment:
       KAWA_URL: ${KAWA_SERVER_URL}:8080
       KAWA_AUTOMATION_SERVER_AES_KEY: ${KAWA_RUNNER_AES_KEY}
+      KAWA_AUTOMATION_SERVER_SCRIPT_TIMEOUT_IN_SECONDS: 1800
     env_file:
       - path: kawa.script-runner.env
         required: false
