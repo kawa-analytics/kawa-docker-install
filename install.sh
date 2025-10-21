@@ -29,7 +29,7 @@ if [[ -n "$ENV_FILE" ]]; then
     fi
 fi
 
-kawa_latest_version="1.32.x"
+kawa_latest_version="1.33.x"
 
 if [[ -z "$KAWA_BRANCH_NAME" ]]; then
     if [[ "$interactive" == "true" ]]; then
@@ -132,6 +132,14 @@ if [ "$interactive" == "true" ]; then
     touch ./server.crt ./server.key
   fi
 fi
+
+# Configure the KAWA URL (Needed to generate links in workflows)
+if [ "$interactive" == "true" ]; then
+  read -r -p "Please specify the URL where kawa can be joined from the outside (eg. https://kawa.wayne.com): " KAWA_SERVER_EXTERNAL_URL
+else
+  KAWA_SERVER_EXTERNAL_URL="http://localhost:8080"
+fi
+
 
 # Update the clickhouse user override file, it accepts the sha256 of the password
 KAWA_DB_PASSWORD=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)

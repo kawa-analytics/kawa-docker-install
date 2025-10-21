@@ -90,7 +90,9 @@ wayne-enterpises
 GbT3zdqLPofY3RTdR56
 ```
 
-3- Lastly, run the installation script:
+3- Configure the workflow engine through: `workflow.properties`. This is configured independently from KAWA. This file contains its own set of instructions.
+
+4- Lastly, run the installation script:
 
 ```
 sudo ./install.sh
@@ -114,7 +116,7 @@ This data directory will contain 3 subdirectories,
 
 ### 2.b Test login on the WEB UI
 
-4- Connect to the web server from a web browser to test the installation:
+Connect to the web server from a web browser to test the installation:
 
 By default, KAWA will listen on port 8080.
 Make sure to use the correct protocol HTTP vs HTTPS depending on what you configured.

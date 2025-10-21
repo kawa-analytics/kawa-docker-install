@@ -22,6 +22,7 @@ services:
       - ./server.crt:/home/kawa/server.crt
       - ./server.key:/home/kawa/server.key
     environment:
+      KAWA_SERVER_URL: ${KAWA_SERVER_EXTERNAL_URL}
       KAWA_GLOBAL_RUNNER_AES_KEY: ${KAWA_RUNNER_AES_KEY}
       KAWA_DEFAULT_RUNNER_AES_KEY: ${KAWA_RUNNER_AES_KEY}
       KAWA_LANGCHAIN_CONFIGURATION: ${KAWA_SERVER_LANGCHAIN_CONFIGURATION}
