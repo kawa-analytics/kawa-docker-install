@@ -70,6 +70,8 @@ services:
     pull_policy: ${KAWA_WORKFLOW_PULL_POLICY}
     environment:
       KAWA_WORKFLOW_JDBC_URL: ${KAWA_WORKFLOW_JDBC_URL}
+    volumes:
+      - ./workflow.properties:/home/kawa/application.properties
     ports:
       - ${KAWA_WORKFLOW_EXTERNAL_PORT}:8088
     env_file:
