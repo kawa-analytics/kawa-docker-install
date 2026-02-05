@@ -29,7 +29,7 @@ if [[ -n "$ENV_FILE" ]]; then
     fi
 fi
 
-kawa_latest_version="1.33.x"
+kawa_latest_version="1.34.x"
 
 if [[ -z "$KAWA_BRANCH_NAME" ]]; then
     if [[ "$interactive" == "true" ]]; then
@@ -58,6 +58,7 @@ fi
 KAWA_OAUTH2_CLIENT_SECRET=NA
 KAWA_SMTP_USERNAME=NA
 KAWA_SMTP_PASSWORD=NA
+
 
 # Configure warehouse
 # Clickhouse or Snowflake
@@ -111,6 +112,17 @@ KAWA_SERVER_URL=http://${KAWA_SERVICE_NAME}
 
 kawa_user=5000:5000
 
+
+# Generate key pair for workflow engine
+WORKFLOW_PRIVATE_KEY=workflow-private-key.pem
+WORKFLOW_PUBLIC_KEY=workflow-public-key.pem
+openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:prime256v1 -out $WORKFLOW_PRIVATE_KEY
+openssl ec -in $WORKFLOW_PRIVATE_KEY -pubout -out $WORKFLOW_PUBLIC_KEY
+
+# Set correct permissions on the private key
+chown $kawa_user ./workflow-private-key.pem
+chmod 600 ./workflow-private-key.pem
+
 # Configure SSL
 if [ "$interactive" == "true" ]; then
   read -r -p "Do you want to use HTTPS to connect to KAWA? Y/[N] " USE_SSL
@@ -161,6 +173,7 @@ KAWA_ACCESS_TOKEN_SECRET=$(head -c 64 /dev/urandom | xxd -p | tr -d '\n')
 KAWA_REFRESH_TOKEN_SECRET=$(head -c 64 /dev/urandom | xxd -p | tr -d '\n')
 KAWA_POSTGRES_JDBC_URL="jdbc:postgresql://postgres:5432/${KAWA_SERVER_DB_NAME}?currentSchema=${KAWA_SERVER_SCHEMA_NAME}&user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
 KAWA_WORKFLOW_JDBC_URL="jdbc:postgresql://postgres:5432/${KAWA_WORKFLOW_DB_NAME}?currentSchema=${KAWA_WORKFLOW_SCHEMA_NAME}&user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
+KAWA_WORKFLOW_KAWA_PUBLIC_KEY=$(sed -e '/-----BEGIN PUBLIC KEY-----/d' -e '/-----END PUBLIC KEY-----/d' $WORKFLOW_PUBLIC_KEY  | tr -d '\n')
 KAWA_CLICKHOUSE_JDBC_URL="jdbc:clickhouse://clickhouse:8123/${kawa_clickhouse_db_name}?user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
 KAWA_CLICKHOUSE_INTERNAL_DATABASE=$kawa_clickhouse_db_name
 KAWA_DOCKER_COMPOSE_NETWORK_NAME=kawa-network-$(tr -dc A-Za-z0-9 </dev/urandom | head -c 8)
@@ -198,4 +211,7 @@ if [ "$KAWA_WAREHOUSE_TYPE" == "CLICKHOUSE" ]; then
 else
   echo "Installation complete. To start the server, run: sudo docker compose up -d."
 fi
+
+
+
 
