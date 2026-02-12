@@ -23,6 +23,7 @@ services:
       - ./server.key:/home/kawa/server.key
       - ./workflow-private-key.pem:/home/kawa/workflow-private-key.pem
     environment:
+      KAWA_EMAIL_IS_ENABLED: true
       KAWA_SERVER_URL: ${KAWA_SERVER_EXTERNAL_URL}
       KAWA_GLOBAL_RUNNER_AES_KEY: ${KAWA_RUNNER_AES_KEY}
       KAWA_DEFAULT_RUNNER_AES_KEY: ${KAWA_RUNNER_AES_KEY}
