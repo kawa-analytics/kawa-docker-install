@@ -84,7 +84,7 @@ services:
         required: false
 
   clickhouse:
-    image: "clickhouse/clickhouse-server:24.8.12-alpine"
+    image: "clickhouse/clickhouse-server:25.8.20.4-alpine"
     profiles:
       - clickhouse
     volumes:
