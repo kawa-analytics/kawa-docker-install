@@ -22,6 +22,7 @@ services:
       - ./server.crt:/home/kawa/server.crt
       - ./server.key:/home/kawa/server.key
       - ./workflow-private-key.pem:/home/kawa/workflow-private-key.pem
+      - ./workflow-to-kawa-public-key.pem:/home/kawa/workflow-to-kawa-public-key.pem
     environment:
       KAWA_EMAIL_IS_ENABLED: true
       KAWA_SERVER_URL: ${KAWA_SERVER_EXTERNAL_URL}
@@ -32,6 +33,7 @@ services:
       KAWA_SMTP_USERNAME: ${KAWA_SMTP_USERNAME}
       KAWA_SMTP_PASSWORD: ${KAWA_SMTP_PASSWORD}
       KAWA_PRIVATE_KEY_PATH: /home/kawa/workflow-private-key.pem
+      KAWA_WORKFLOW_PUBLIC_KEY_PATH: /home/kawa/workflow-to-kawa-public-key.pem
       KAWA_PATH_TO_SERVER_CERTIFICATE: /home/kawa/server.crt
       KAWA_PATH_TO_SERVER_PRIVATE_KEY: /home/kawa/server.key
       KAWA_BYPASS_VAULT: true
@@ -75,6 +77,7 @@ services:
     environment:
       KAWA_WORKFLOW_JDBC_URL: ${KAWA_WORKFLOW_JDBC_URL}
       APP_AUTH_CLIENTS_KAWA: ${KAWA_WORKFLOW_KAWA_PUBLIC_KEY}
+      APP_AUTH_SIGNING_KEY: ${KAWA_WORKFLOW_PRIVATE_KEY}
     volumes:
       - ./workflow.properties:/home/kawa/application.properties
     ports:

@@ -113,7 +113,7 @@ KAWA_SERVER_URL=http://${KAWA_SERVICE_NAME}
 kawa_user=5000:5000
 
 
-# Generate key pair for workflow engine
+# Generate key pair for communication between kawa and workflow engine
 WORKFLOW_PRIVATE_KEY=workflow-private-key.pem
 WORKFLOW_PUBLIC_KEY=workflow-public-key.pem
 openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:prime256v1 -out $WORKFLOW_PRIVATE_KEY
@@ -122,6 +122,19 @@ openssl ec -in $WORKFLOW_PRIVATE_KEY -pubout -out $WORKFLOW_PUBLIC_KEY
 # Set correct permissions on the private key
 chown $kawa_user ./workflow-private-key.pem
 chmod 600 ./workflow-private-key.pem
+
+
+# Generate key pair for communication between workflow and kawa engine
+WORKFLOW_TO_KAWA_PRIVATE_KEY=workflow-to-kawa-private-key.pem
+WORKFLOW_TO_KAWA_PUBLIC_KEY=workflow-to-kawa-public-key.pem
+openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:prime256v1 -out $WORKFLOW_TO_KAWA_PRIVATE_KEY
+openssl ec -in $WORKFLOW_TO_KAWA_PRIVATE_KEY -pubout -out $WORKFLOW_TO_KAWA_PUBLIC_KEY
+
+# Set correct permissions on the private key
+chown $kawa_user ./workflow-to-kawa-private-key.pem
+chmod 600 ./workflow-to-kawa-private-key.pem
+
+
 
 # Configure SSL
 if [ "$interactive" == "true" ]; then
@@ -174,6 +187,7 @@ KAWA_REFRESH_TOKEN_SECRET=$(head -c 64 /dev/urandom | xxd -p | tr -d '\n')
 KAWA_POSTGRES_JDBC_URL="jdbc:postgresql://postgres:5432/${KAWA_SERVER_DB_NAME}?currentSchema=${KAWA_SERVER_SCHEMA_NAME}&user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
 KAWA_WORKFLOW_JDBC_URL="jdbc:postgresql://postgres:5432/${KAWA_WORKFLOW_DB_NAME}?currentSchema=${KAWA_WORKFLOW_SCHEMA_NAME}&user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
 KAWA_WORKFLOW_KAWA_PUBLIC_KEY=$(sed -e '/-----BEGIN PUBLIC KEY-----/d' -e '/-----END PUBLIC KEY-----/d' $WORKFLOW_PUBLIC_KEY  | tr -d '\n')
+KAWA_WORKFLOW_PRIVATE_KEY=$(sed -e '/-----BEGIN PRIVATE KEY-----/d' -e '/-----END PRIVATE KEY-----/d' $WORKFLOW_TO_KAWA_PRIVATE_KEY  | tr -d '\n')
 KAWA_CLICKHOUSE_JDBC_URL="jdbc:clickhouse://clickhouse:8123/${kawa_clickhouse_db_name}?user=${KAWA_DB_USER}&password=${KAWA_DB_PASSWORD}"
 KAWA_CLICKHOUSE_INTERNAL_DATABASE=$kawa_clickhouse_db_name
 KAWA_DOCKER_COMPOSE_NETWORK_NAME=kawa-network-$(tr -dc A-Za-z0-9 </dev/urandom | head -c 8)
