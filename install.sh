@@ -61,7 +61,7 @@ KAWA_SMTP_PASSWORD=NA
 
 
 # Configure warehouse
-# Clickhouse or Snowflake
+# Clickhouse, Snowflake or Databricks
 if [ "$interactive" == "true" ]; then
   read -r -p "Do you want to connect to an external snowflake warehouse? Y/[N] " USE_SNOWFLAKE
   if [ "$USE_SNOWFLAKE" == 'Y' ] || [ "$USE_SNOWFLAKE" == 'y' ]; then
@@ -83,7 +83,20 @@ if [ "$interactive" == "true" ]; then
       fi    
 
   else
-    KAWA_WAREHOUSE_TYPE='CLICKHOUSE'
+    read -r -p "Do you want to connect to an external databricks warehouse? Y/[N] " USE_DATABRICKS
+    if [ "$USE_DATABRICKS" == 'Y' ] || [ "$USE_DATABRICKS" == 'y' ]; then
+      KAWA_WAREHOUSE_TYPE='DATABRICKS'
+      # Databricks authenticates a personal access token as the literal user 'token'
+      KAWA_DATABRICKS_USER='token'
+      read -r -p "Please specify the databricks personal access token: " KAWA_DATABRICKS_PASSWORD
+      read -r -p "Please specify the databricks jdbc url (Connection details tab of the warehouse): " KAWA_DATABRICKS_JDBC_URL
+      read -r -p "Please specify the catalog where kawa will write (Must exist): " KAWA_DATABRICKS_WRITER_CATALOG
+      read -r -p "Please specify the schema where kawa will write (Must exist): " KAWA_DATABRICKS_WRITER_SCHEMA
+      read -r -p "Please specify the prefix of the tables kawa creates [kawa_]: " KAWA_DATABRICKS_WRITER_TABLE_PREFIX
+      KAWA_DATABRICKS_WRITER_TABLE_PREFIX="${KAWA_DATABRICKS_WRITER_TABLE_PREFIX:-kawa_}"
+    else
+      KAWA_WAREHOUSE_TYPE='CLICKHOUSE'
+    fi
   fi
 fi
 
